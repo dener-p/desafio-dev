@@ -1,92 +1,72 @@
-# 💼 Desafio Técnico Dev Fullstack
-Este é um desafio técnico para a vaga de Desenvolvedor Pleno. Seu objetivo é desenvolver uma aplicação movimentações financeiras, com autenticação de usuário, associação de categorias e persistência em banco de dados.
+# 💼 Desafio Técnico Dev Fullstack - Solução
 
-## 🧰 Requisitos Técnicos
-- Usar a estrutura inicial deste repositório (API utilizando NestJS e UI utilizando NextJS+Tailwind).
-- Login de usuário.
-- Cadastro de Usuários.
-- Cadastro de Movimentações.
-- Cadastro de Categorias
-- As movimentações devem ser associadas ao usuário autenticado.
+Esta é a solução para o desafio técnico Fullstack (NestJS + NextJS). 
 
-## ✅ O que será avaliado?
+## 🚀 Tecnologias Utilizadas
 
-- **📁 Organização do Código**  
-  Estrutura clara de pastas e arquivos, padronização e uso adequado de convenções do framework.
+**Backend:**
+- NestJS (Framework)
+- Fastify (Web Server)
+- Drizzle ORM (Banco de Dados)
+- SQLite (Banco Relacional)
+- Passport & JWT (Autenticação)
+- Swagger (Documentação API)
 
-- **🧹 Legibilidade e Clareza**  
-  Código limpo, bem nomeado e fácil de entender. Comentários úteis (quando necessário) e ausência de complexidade desnecessária.
+**Frontend:**
+- Next.js (App Router)
+- React Hook Form & Zod (Formulários e Validação)
+- Tailwind CSS v4 (Estilização Moderna e Responsiva)
+- Axios (Cliente HTTP)
+- Lucide React (Ícones)
+- JS Cookie (Persistência de Sessão)
 
-- **🛠️ Boas Práticas de Desenvolvimento**  
-  Uso de princípios como DRY (Don't Repeat Yourself), SOLID, controle de erros, validações e segurança básica.
+---
 
-- **💾 Persistência de Dados**  
-  Implementação correta de banco de dados, com relacionamentos adequados entre usuários, categorias e movimentações.  
-  **Dica:** Use um ORM 👀
+## ⚙️ Como Instalar e Executar
 
-- **📝 Documentação**  
-  README com orientações completas sobre instalação*, execução e stack utilizada.  
-  A API deve estar documentada com **Swagger**.
+Siga os passos abaixo para rodar o projeto localmente:
 
-> ⚠️ **Importante:** Projetos que **não rodarem seguindo as instruções do README** poderão **ser desconsiderados** na avaliação.
-
-
-## 🌟 Diferenciais
-Não são obrigatórios, mas serão considerados um **bônus** na sua avaliação:
-
-- 🧪 **Testes Automatizados**  
-  Cobertura de testes (unitários e/ou de integração).
-
-- 📱 **Responsividade no Frontend**  
-  Interface adaptada para diferentes tamanhos de tela.
-
-- 🚀 **Deploy do Projeto**  
-  Aplicação hospedada (ex: Vercel, Netlify, Render, Railway, etc), com link acessível no README.
-
-- 🛡️ **Tratamento de Erros e Validações**  
-  Respostas consistentes e mensagens claras de erro na API.
-
-- 🧩 **Arquitetura Escalável**  
-  Separação por camadas (ex: controllers, services, repositories), facilitando manutenção e evolução do projeto.
-
-- 🗂️ **Documentação Extra**  
-  Diagramas, fluxos ou qualquer outro material que ajude a entender a arquitetura ou decisões técnicas.
-
-## 📁 Estrutura do Projeto
-
-O projeto está dividido em duas aplicações separadas:
-```text
-📦 projeto-raiz/
-├── 📁 api/                      # Backend (NestJS)
-│   ├── 📁 node_modules/
-│   ├── 📁 src/                  # Código-fonte da API
-│   ├── 📁 test/                 # Testes automatizados
-│   ├── ...
-│
-├── 📁 ui/                       # Frontend (Next.js)
-│   ├── 📁 node_modules/
-│   ├── 📁 public/               # Arquivos estáticos
-│   ├── 📁 src/
-│   │   └── 📁 app/              # Código-fonte do frontend
-│   ├── ...
+### 1. Backend (API)
+Navegue até a pasta `api`:
+```bash
+cd api
 ```
 
-## 🗄️ Banco de Dados
-Se sua aplicação utilizar **banco de dados relacional** (como PostgreSQL, MySQL, etc), é **obrigatório** fornecer um dos seguintes:
+Instale as dependências:
+```bash
+npm install
+```
 
-- Script SQL para criação das tabelas e estruturas necessárias  
-  **ou**
-- Migrations configuradas e executáveis via ORM.
+O banco de dados SQLite será criado automaticamente. Inicie o servidor em modo de desenvolvimento:
+```bash
+npm run start:dev
+```
+A API estará rodando em `http://localhost:3001`. A documentação **Swagger** pode ser acessada em `http://localhost:3001/swagger`.
 
-> ⚠️ **Importante:** Sem essas informações, **não será possível rodar a aplicação**, e ela poderá ser **desconsiderada** na avaliação.
+### 2. Frontend (UI)
+Abra um novo terminal e navegue até a pasta `ui`:
+```bash
+cd ui
+```
 
-## ⏱️ Prazo de entrega sugerido:
-3 a 5 dias corridos. Qualidade importa mais do que velocidade.
+Instale as dependências:
+```bash
+npm install
+```
 
-## 🚀 Como Enviar sua Solução
-- 🔀 Faça um Fork deste repositório para a sua conta no GitHub.
-- 🧑🏽‍💻 Implemente a sua solução no repositório forkado.
-- 🌐 Certifique-se de que o repositório esteja público.
-- 📩 Envie o link do seu repositório para o e-mail:
-  - ti@profissionaissa.com
-  - Com cópia para: jonata.martins@profissionaissa.com
+Inicie o servidor frontend:
+```bash
+npm run dev
+```
+O Frontend estará rodando em `http://localhost:3000`.
+
+---
+
+## 🛠️ Decisões Arquiteturais
+- **Backend**: Utilizei o padrão `Package by Feature` nativo do NestJS (separando as funcionalidades por módulos como Auth, Users, Categories, Transactions). O Drizzle ORM foi configurado visando simplicidade com um banco SQLite local (`sqlite.db`).
+- **Frontend**: O Contexto de Autenticação (`useAuth`) foi implementado utilizando Cookies (`js-cookie`) e Interceptors no Axios para garantir um fluxo de segurança robusto. A interface foi construída usando *glassmorphism*, gradientes vibrantes e temas escuros (Dark Mode by default) focando na fluidez da experiência do usuário (UX).
+
+## 🗄️ Estrutura do Banco
+Utilizamos Drizzle ORM com SQLite. O schema reside em `api/src/database/schema.ts` definindo as tabelas `users`, `categories`, e `transactions` corretamente relacionadas via chaves estrangeiras.
+
+> O banco de dados foi gerado usando o comando `npx drizzle-kit push` para garantir a versão atual do schema.
