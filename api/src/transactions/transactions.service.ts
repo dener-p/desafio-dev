@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import type { CreateTransactionDto } from './dto/create-transaction.dto';
+import type { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { db } from '../database/database';
 import { transactions, categories } from '../database/schema';
 import { eq, and, desc } from 'drizzle-orm';
@@ -8,7 +8,8 @@ import { eq, and, desc } from 'drizzle-orm';
 @Injectable()
 export class TransactionsService {
   async create(createTransactionDto: CreateTransactionDto, userId: number) {
-    // verify if category exists and belongs to user
+    console.log('hello');
+    console.log({ CreateTransactionDto: createTransactionDto.description });
     const category = await db
       .select()
       .from(categories)

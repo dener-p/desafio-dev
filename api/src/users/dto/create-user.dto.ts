@@ -1,19 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { userSchemas } from '@desafio-dev/shared/user-schemas';
+import { createZodDto } from 'nestjs-zod';
 
-export class CreateUserDto {
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  name!: string;
-
-  @ApiProperty()
-  @IsEmail()
-  @IsNotEmpty()
-  email!: string;
-
-  @ApiProperty()
-  @IsString()
-  @MinLength(6)
-  password!: string;
-}
+export class CreateUserDto extends createZodDto(userSchemas.createUser) {}

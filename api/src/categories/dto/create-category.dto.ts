@@ -1,9 +1,6 @@
-import { IsNotEmpty, IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { categoriesSchema } from '@desafio-dev/shared/categories-schemas';
+import { createZodDto } from 'nestjs-zod';
 
-export class CreateCategoryDto {
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  name!: string;
-}
+export class CreateCategoryDto extends createZodDto(
+  categoriesSchema.createCategory,
+) {}

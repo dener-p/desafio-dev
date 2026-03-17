@@ -1,0 +1,15 @@
+{
+  "name": "@desafio-dev/shared",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./*.ts"
+    },
+    "./*": {
+      "default": "./*.ts"
+    }
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  }
+}

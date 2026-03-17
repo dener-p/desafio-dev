@@ -20,7 +20,7 @@ import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 @UseGuards(JwtAuthGuard)
 @Controller('transactions')
 export class TransactionsController {
-  constructor(private readonly transactionsService: TransactionsService) {}
+  constructor(private readonly transactionsService: TransactionsService) { }
 
   @Post()
   @ApiOperation({ summary: 'Create a transaction' })
@@ -28,6 +28,8 @@ export class TransactionsController {
     @Body() createTransactionDto: CreateTransactionDto,
     @Req() req: { user: { id: number } },
   ) {
+    console.log('hello');
+    console.log({ createTransactionDto });
     return this.transactionsService.create(createTransactionDto, req.user.id);
   }
 

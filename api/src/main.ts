@@ -3,14 +3,13 @@ import { AppModule } from './app.module';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
+import { cleanupOpenApiDoc } from 'nestjs-zod';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(),
   );
-
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Desafio Técnico - Backend')
     .setDescription('')
@@ -18,9 +17,8 @@ async function bootstrap() {
     .addTag('')
     .build();
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('swagger', app, swaggerDocument);
-
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  const document = cleanupOpenApiDoc(swaggerDocument);
+  SwaggerModule.setup('swagger', app, document);
 
   app.enableCors({
     origin: '*',
