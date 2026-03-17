@@ -8,6 +8,7 @@
       "ui/**"
     ],
     "catalog": {
+      "better-auth": "^1.5.5",
       "zod": "^4.1.13"
     }
   },
@@ -26,6 +27,7 @@
   },
   "dependencies": {
     "@desafio-dev/shared": "workspace:*",
+    "better-auth": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

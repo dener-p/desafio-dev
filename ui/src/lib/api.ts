@@ -1,12 +1,13 @@
-import axios from 'axios';
-import Cookies from 'js-cookie';
+import axios from "axios";
+import Cookies from "js-cookie";
 
 export const api = axios.create({
-  baseURL: 'http://localhost:3001',
+  baseURL: "http://localhost:3001",
+  withCredentials: true,
 });
 
 api.interceptors.request.use((config) => {
-  const token = Cookies.get('token');
+  const token = Cookies.get("token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
