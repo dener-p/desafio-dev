@@ -1,52 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { api } from "@/lib/api";
 import { Plus, ArrowUpCircle, ArrowDownCircle, Wallet } from "lucide-react";
 import Link from "next/link";
-import { format } from "date-fns";
 import { formatDate } from "@/utils/format-date";
-
-interface Transaction {
-  id: number;
-  description: string;
-  amount: number;
-  type: "income" | "expense";
-  date: string;
-  categoryName: string;
-}
+import { transactions } from "@/api/transactions";
 
 export default function DashboardPage() {
-  const { user, loading: authLoading } = useAuth();
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data } = transactions.getTransactions();
+  if (!data) return;
 
-  useEffect(() => {
-    if (user) {
-      loadTransactions();
-    }
-  }, [user]);
-
-  const loadTransactions = async () => {
-    try {
-      const { data } = await api.get("/transactions");
-      setTransactions(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (authLoading || loading)
-    return <div className="p-8 text-slate-400">Loading...</div>;
-  if (!user) return null;
-
-  const totalIncome = transactions
+  const totalIncome = data
     .filter((t) => t.type === "income")
     .reduce((acc, t) => acc + t.amount, 0);
-  const totalExpense = transactions
+  const totalExpense = data
     .filter((t) => t.type === "expense")
     .reduce((acc, t) => acc + t.amount, 0);
   const balance = totalIncome - totalExpense;
@@ -122,13 +88,13 @@ export default function DashboardPage() {
           </h2>
         </div>
 
-        {transactions.length === 0 ? (
+        {data.length === 0 ? (
           <div className="p-12 text-center text-slate-500">
             No transactions found. Add your first income or expense!
           </div>
         ) : (
           <div className="divide-y divide-slate-800">
-            {transactions.map((t) => (
+            {data.map((t) => (
               <div
                 key={t.id}
                 className="p-6 flex items-center justify-between hover:bg-slate-800/50 transition-colors"

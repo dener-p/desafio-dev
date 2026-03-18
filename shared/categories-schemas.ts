@@ -8,4 +8,4 @@ const createCategory = z.object({
     .trim(),
 });
 
-export const categoriesSchema = { createCategory };
+export const categoriesSchemas = { createCategory };

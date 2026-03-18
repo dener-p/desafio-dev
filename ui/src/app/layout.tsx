@@ -1,14 +1,14 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css';
-import { AuthProvider } from '@/hooks/useAuth';
-import { Navbar } from '@/components/Navbar';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { Navbar } from "@/components/Navbar";
+import { QueryProvider } from "@/lib/query-provider";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Dev Fullstack Challenge',
-  description: 'Financial Management Application',
+  title: "Dev Fullstack Challenge",
+  description: "Financial Management Application",
 };
 
 export default function RootLayout({
@@ -18,11 +18,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.className} bg-slate-950 text-slate-50 min-h-screen antialiased flex flex-col`}>
-        <AuthProvider>
+      <body
+        className={`${inter.className} bg-slate-950 text-slate-50 min-h-screen antialiased flex flex-col`}
+      >
+        <QueryProvider>
           <Navbar />
           <main className="flex-grow flex flex-col">{children}</main>
-        </AuthProvider>
+        </QueryProvider>
       </body>
     </html>
   );

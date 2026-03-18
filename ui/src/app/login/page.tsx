@@ -4,28 +4,19 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { api } from "@/lib/api";
-import { useAuth } from "@/hooks/useAuth";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
+import { userSchemas } from "@desafio-dev/shared/user-schemas";
 
-const loginSchema = z.object({
-  email: z.string().email("Invalid email format"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
-
-type LoginFormData = z.infer<typeof loginSchema>;
+type LoginFormData = z.infer<typeof userSchemas.login>;
 
 export default function LoginPage() {
-  const { login } = useAuth();
-  const [error, setError] = useState("");
-
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(userSchemas.login),
   });
 
   const onSubmit = async (data: LoginFormData) => {
@@ -47,12 +38,6 @@ export default function LoginPage() {
               Sign in to manage your finances
             </p>
           </div>
-
-          {error && (
-            <div className="bg-red-500/10 border border-red-500/50 text-red-400 p-3 rounded-lg mb-6 text-sm">
-              {error}
-            </div>
-          )}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>

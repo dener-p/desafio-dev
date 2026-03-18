@@ -2,8 +2,18 @@
 
 import Link from "next/link";
 import { LogOut, LayoutDashboard, Tags } from "lucide-react";
+import { user } from "@/api/user";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export function Navbar() {
+  const me = user.me();
+  const router = useRouter();
+  useEffect(() => {
+    if (me.isError) router.replace("/login");
+  }, [me.isError, router]);
+
   return (
     <nav className="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,9 +43,11 @@ export function Navbar() {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-slate-400">Hello, {user.name}</span>
+            <span className="text-sm text-slate-400">
+              Hello, {me.data?.name}
+            </span>
             <button
-              onClick={}
+              onClick={() => authClient.signOut()}
               className="p-2 text-slate-400 hover:text-red-400 transition-colors rounded-full hover:bg-slate-800"
               title="Logout"
             >

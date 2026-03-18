@@ -1,7 +1,8 @@
-import { betterAuth } from 'better-auth';
+import { betterAuth, BetterAuthError } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { db } from '../database/database';
 import { account, session, user, verification } from 'src/database/schema';
+import { HttpException } from '@nestjs/common';
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -18,9 +19,20 @@ export const auth = betterAuth({
     enabled: true,
   },
   advanced: {
-    disableCSRFCheck: true, // add this temporarily to confirm it's the cause
     database: {
       generateId: false,
+    },
+  },
+  onAPIError: {
+    // ❌ Remove: throw: true  ← this is what breaks the flow in NestJS
+    onError: (error, ctx) => {
+      console.error('Auth error:', error); // will now actually fire
+
+      // Optional: rethrow as a NestJS-friendly exception
+      throw new HttpException(
+        error.message ?? 'Authentication error',
+        error.statusCode ?? 500,
+      );
     },
   },
 });

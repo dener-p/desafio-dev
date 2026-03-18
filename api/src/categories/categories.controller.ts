@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
   Req,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
