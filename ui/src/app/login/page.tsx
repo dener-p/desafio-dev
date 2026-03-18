@@ -1,16 +1,19 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Link from "next/link";
-import { authClient } from "@/lib/auth-client";
 import { userSchemas } from "@desafio-dev/shared/user-schemas";
+import { auth } from "@/api/auth";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
 
 type LoginFormData = z.infer<typeof userSchemas.login>;
 
 export default function LoginPage() {
+  const login = useMutation(auth.login);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -20,10 +23,12 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    await authClient.signIn.email({
+    await login.mutateAsync({
       email: data.email,
       password: data.password,
     });
+
+    router.push("/");
   };
 
   return (
@@ -35,7 +40,7 @@ export default function LoginPage() {
               FinTrack
             </h1>
             <p className="text-slate-400 mt-2">
-              Sign in to manage your finances
+              Faça login para gerenciar suas finanças.
             </p>
           </div>
 
@@ -48,7 +53,7 @@ export default function LoginPage() {
                 {...register("email")}
                 type="email"
                 className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
-                placeholder="you@example.com"
+                placeholder="email@email.com"
               />
               {errors.email && (
                 <p className="text-red-400 text-xs mt-1">
@@ -59,7 +64,7 @@ export default function LoginPage() {
 
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-1">
-                Password
+                Senha
               </label>
               <input
                 {...register("password")}
@@ -76,20 +81,20 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || login.isPending}
               className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-2.5 rounded-lg transition-transform transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? "Signing in..." : "Sign In"}
+              {isSubmitting ? "..." : "Entrar"}
             </button>
           </form>
 
           <p className="mt-6 text-center text-sm text-slate-400">
-            Don't have an account?{" "}
+            Não tem uma conta?{" "}
             <Link
               href="/register"
               className="text-blue-400 hover:text-blue-300 transition-colors font-medium"
             >
-              Create one
+              Crie uma.
             </Link>
           </p>
         </div>

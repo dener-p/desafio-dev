@@ -4,12 +4,12 @@ import type { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { db } from '../database/database';
 import { transactions, categories } from '../database/schema';
 import { eq, and, desc } from 'drizzle-orm';
+import { AppException } from 'src/app.exception';
 
 @Injectable()
 export class TransactionsService {
   async create(createTransactionDto: CreateTransactionDto, userId: number) {
-    console.log('hello');
-    console.log({ CreateTransactionDto: createTransactionDto.description });
+    // doing this to not get circular depedences...
     const category = await db
       .select()
       .from(categories)
@@ -22,9 +22,10 @@ export class TransactionsService {
       .limit(1);
 
     if (!category.length) {
-      throw new NotFoundException(
-        'Category not found or does not belong to you',
-      );
+      throw new AppException({
+        message: 'Categoria não encontrada.',
+        cause: 'CategoryNotFound',
+      });
     }
 
     const result = await db
@@ -38,6 +39,7 @@ export class TransactionsService {
   }
 
   async findAll(userId: number) {
+    // Should add pagination here...
     return db
       .select({
         id: transactions.id,
@@ -62,9 +64,28 @@ export class TransactionsService {
       .limit(1);
 
     if (!result.length) {
-      throw new NotFoundException(`Transaction #${id} not found`);
+      throw new AppException({
+        message: 'Transação não encontrada',
+        cause: 'TransactioinNotFound',
+      });
     }
     return result[0];
+  }
+
+  async findByCategoryId(categoryId: number, userId: number) {
+    const [result] = await db
+      .select()
+      .from(transactions)
+      .where(
+        and(
+          eq(transactions.categoryId, categoryId),
+          eq(transactions.userId, userId),
+        ),
+      )
+      .limit(1);
+
+    // typescript
+    return result ?? null;
   }
 
   async update(
@@ -72,7 +93,7 @@ export class TransactionsService {
     updateTransactionDto: UpdateTransactionDto,
     userId: number,
   ) {
-    await this.findOne(id, userId); // verify existence
+    await this.findOne(id, userId);
 
     if (updateTransactionDto.categoryId) {
       const category = await db
@@ -87,9 +108,10 @@ export class TransactionsService {
         .limit(1);
 
       if (!category.length) {
-        throw new NotFoundException(
-          'Category not found or does not belong to you',
-        );
+        throw new AppException({
+          cause: 'CategoryNotFound',
+          message: 'Categoria não encontrada.',
+        });
       }
     }
 
@@ -103,7 +125,7 @@ export class TransactionsService {
   }
 
   async remove(id: number, userId: number) {
-    await this.findOne(id, userId); // verify existence
+    await this.findOne(id, userId);
     await db
       .delete(transactions)
       .where(and(eq(transactions.id, id), eq(transactions.userId, userId)));

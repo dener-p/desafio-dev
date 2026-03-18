@@ -7,19 +7,39 @@ import * as z from "zod";
 import { api } from "@/lib/api";
 import { Trash2, Tags, Plus } from "lucide-react";
 import { categoriesSchemas } from "@desafio-dev/shared/categories-schemas";
-import { categories } from "@/api/categories";
+import { categories, Category } from "@/api/categories";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 type CategoryFormData = z.infer<typeof categoriesSchemas.createCategory>;
 
 export default function CategoriesPage() {
-  const [loading, setLoading] = useState(true);
-  const createCategory = categories.newCategory();
-  const { data } = categories.getCategories();
+  const createCategory = useMutation(categories.newCategory);
+  const deleteCategory = useMutation({
+    ...categories.deleteCategory,
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({
+        queryKey: categories.getCategories.queryKey,
+      });
+      const previousCategories = queryClient.getQueryData<Category[]>(
+        categories.getCategories.queryKey,
+      );
+      // Optimistically update the cache
+      if (previousCategories) {
+        queryClient.setQueryData<Category[]>(
+          categories.getCategories.queryKey,
+          previousCategories.filter((category) => category.id !== id),
+        );
+      }
+
+      return { previousCategories };
+    },
+  });
+  const { data } = useQuery(categories.getCategories);
+  const queryClient = useQueryClient();
 
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors, isSubmitting },
   } = useForm<CategoryFormData>({
     resolver: zodResolver(categoriesSchemas.createCategory),
@@ -29,31 +49,33 @@ export default function CategoriesPage() {
     createCategory.mutate(data);
   };
 
-  const handleDelete = async (id: number) => {};
+  const handleDelete = async (id: number) => {
+    deleteCategory.mutate(id);
+  };
 
   return (
     <div className="max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       <div className="flex items-center gap-3 mb-8">
         <Tags className="text-blue-400" size={28} />
-        <h1 className="text-2xl font-bold text-white">Manage Categories</h1>
+        <h1 className="text-2xl font-bold text-white">Gerenciar Categorias</h1>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-1">
           <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
             <h2 className="text-lg font-semibold text-white mb-4">
-              Add Category
+              Adicionar Categoria
             </h2>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1">
-                  Name
+                  Nome
                 </label>
                 <input
                   {...register("name")}
                   type="text"
                   className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
-                  placeholder="e.g. Salary, Groceries"
+                  placeholder="Salario, Mercado"
                 />
                 {errors.name && (
                   <p className="text-red-400 text-xs mt-1">
@@ -68,7 +90,7 @@ export default function CategoriesPage() {
                 className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-2.5 rounded-lg transition-transform transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 <Plus size={18} />
-                {isSubmitting ? "Saving..." : "Add"}
+                {isSubmitting ? "Saving..." : "Adicionar"}
               </button>
             </form>
           </div>
@@ -78,7 +100,7 @@ export default function CategoriesPage() {
           <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
             <div className="p-6 border-b border-slate-800">
               <h2 className="text-lg font-semibold text-white">
-                Your Categories
+                Suas Categorias
               </h2>
             </div>
 

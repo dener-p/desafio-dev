@@ -1,27 +1,12 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from './users/users.module';
 import { CategoriesModule } from './categories/categories.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod';
-import { AuthModule } from '@thallesp/nestjs-better-auth';
-import { auth } from './auth/auth';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [
-    AuthModule.forRoot({
-      auth,
-      bodyParser: {
-        json: { limit: '2mb' },
-        urlencoded: { limit: '2mb', extended: true },
-        rawBody: true,
-      },
-    }),
-
-    UsersModule,
-    CategoriesModule,
-    TransactionsModule,
-  ],
+  imports: [AuthModule, CategoriesModule, TransactionsModule],
   providers: [
     {
       provide: APP_PIPE,

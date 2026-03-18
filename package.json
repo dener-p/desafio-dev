@@ -8,7 +8,6 @@
       "ui"
     ],
     "catalog": {
-      "better-auth": "^1.5.5",
       "zod": "^4.1.13"
     }
   },
@@ -18,17 +17,16 @@
     "build": "turbo build",
     "check-types": "turbo check-types",
     "clean": "rm -rf node_modules && rm -rf api/node_modules && rm -rf ui/node_modules && rm -rf apps/*/dist && rm -rf shared/node_modules",
-    "dev:web": "turbo -F web dev",
-    "dev:server": "turbo -F api dev",
-    "db:push": "turbo -F api db:push",
-    "db:studio": "turbo -F api db:studio",
-    "db:generate": "turbo -F api db:generate",
-    "db:migrate": "turbo -F api db:migrate",
-    "db:local": "turbo -F api db:local"
+    "dev:web": "turbo -F @desafio-dev/ui dev",
+    "dev:server": "turbo -F @desafio-dev/api dev",
+    "db:push": "turbo -F @desafio-dev/api db:push",
+    "db:studio": "turbo -F @desafio-dev/api db:studio",
+    "db:generate": "turbo -F @desafio-dev/api db:generate",
+    "db:migrate": "turbo -F @desafio-dev/api db:migrate",
+    "db:local": "turbo -F @desafio-dev/api db:local"
   },
   "dependencies": {
     "@desafio-dev/shared": "workspace:*",
-    "better-auth": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

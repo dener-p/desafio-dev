@@ -1,6 +1,6 @@
 import { transactionsSchemas } from '@desafio-dev/shared/transactions-schemas';
 import { createZodDto } from 'nestjs-zod';
 
-export class CreateTransactionDto extends createZodDto(
-  transactionsSchemas.createTransaction,
+export class TransactionResponseDto extends createZodDto(
+  transactionsSchemas.transactionResponse,
 ) {}

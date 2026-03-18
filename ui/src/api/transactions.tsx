@@ -1,41 +1,32 @@
 import { api } from "@/lib/api";
-import { transactionsSchemas } from "@desafio-dev/shared/transactions-scehamas";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { DefaultErrorType } from "@/types/default-error-type";
+import { transactionsSchemas } from "@desafio-dev/shared/transactions-schemas";
 import z from "zod";
 
-const getTransactions = () =>
-  useQuery({
-    queryKey: ["transactions"],
-    queryFn: async () => {
-      const res = await api.get("/transactions");
-      const json = res.data;
-      if (res.status >= 400) {
-        throw new Error({
-          cause: json.cause,
-          message: json.message,
-        });
-      }
-      return json;
-    },
-  });
+const getTransactions = {
+  queryKey: ["transactions"],
+  queryFn: async () => {
+    const res = await api.get("/transactions");
+    if (res.status >= 400) {
+      const json = res.data as DefaultErrorType;
+      throw new Error(json?.message ?? "Erro interno", { cause: json?.cause });
+    }
+    return res.data as z.infer<typeof transactionsSchemas.transactionResponse>;
+  },
+};
 
-const newTransactions = () =>
-  useMutation({
-    mutationKey: ["create", "transactions"],
-    mutationFn: async (
-      data: z.infer<typeof transactionsSchemas.createTransaction>,
-    ) => {
-      const res = await api.post("/transactions", data);
-      const json = res.data;
-      if (res.status >= 400) {
-        throw new Error({
-          cause: json.cause,
-          message: json.message,
-        });
-      }
-      return json;
-    },
-  });
+const newTransactions = {
+  mutationKey: ["create", "transactions"],
+  mutationFn: async (
+    data: z.infer<typeof transactionsSchemas.createTransaction>,
+  ) => {
+    const res = await api.post("/transactions", data);
+    if (res.status >= 400) {
+      const json = res.data as DefaultErrorType;
+      throw new Error(json?.message ?? "Erro interno", { cause: json?.cause });
+    }
+  },
+};
 
 export const transactions = {
   getTransactions,

@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { QueryProvider } from "@/lib/query-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,11 +20,14 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${inter.className} bg-slate-950 text-slate-50 min-h-screen antialiased flex flex-col`}
+        className={`${inter.className} bg-background  text-foreground min-h-screen antialiased flex flex-col`}
       >
         <QueryProvider>
           <Navbar />
-          <main className="flex-grow flex flex-col">{children}</main>
+          <Toaster />
+          <main className="max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+            {children}
+          </main>
         </QueryProvider>
       </body>
     </html>

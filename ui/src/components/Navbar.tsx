@@ -2,17 +2,23 @@
 
 import Link from "next/link";
 import { LogOut, LayoutDashboard, Tags } from "lucide-react";
-import { user } from "@/api/user";
-import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { auth } from "@/api/auth";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+
+const publicRoutes = ["/login", "/register"];
 
 export function Navbar() {
-  const me = user.me();
+  const me = useQuery(auth.me);
+  const logout = useMutation(auth.logout);
   const router = useRouter();
+  const pathname = usePathname();
   useEffect(() => {
-    if (me.isError) router.replace("/login");
-  }, [me.isError, router]);
+    if (me.isError && !publicRoutes.includes(pathname)) {
+      router.replace("/login");
+    }
+  }, [me.isError, router, pathname]);
 
   return (
     <nav className="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
@@ -38,16 +44,14 @@ export function Navbar() {
                 className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors"
               >
                 <Tags size={18} />
-                Categories
+                Categorias
               </Link>
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-slate-400">
-              Hello, {me.data?.name}
-            </span>
+            <span className="text-sm text-slate-400">Olá, {me.data?.name}</span>
             <button
-              onClick={() => authClient.signOut()}
+              onClick={() => logout.mutate()}
               className="p-2 text-slate-400 hover:text-red-400 transition-colors rounded-full hover:bg-slate-800"
               title="Logout"
             >

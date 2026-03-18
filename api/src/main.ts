@@ -5,10 +5,12 @@ import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { cleanupOpenApiDoc } from 'nestjs-zod';
 import cors from '@fastify/cors';
+import fastifyCookie from '@fastify/cookie';
 
 async function bootstrap() {
   const adapter = new FastifyAdapter();
 
+  await adapter.register(fastifyCookie);
   // register CORS on the raw fastify instance
   await adapter.register(cors, {
     origin: 'http://localhost:3000',
@@ -19,10 +21,6 @@ async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     adapter,
-    {
-      // disabled for nestjs-better-auth
-      bodyParser: false,
-    },
   );
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Desafio Técnico - Backend')

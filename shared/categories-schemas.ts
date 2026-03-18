@@ -7,5 +7,9 @@ const createCategory = z.object({
     .max(60, { message: "Maximo de 60 caracteres" })
     .trim(),
 });
+const categoryResponse = z.object({
+  id: z.number(),
+  name: z.string(),
+});
 
-export const categoriesSchemas = { createCategory };
+export const categoriesSchemas = { createCategory, categoryResponse };

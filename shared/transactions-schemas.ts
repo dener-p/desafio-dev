@@ -16,4 +16,8 @@ const createTransaction = z.object({
   date: z.string(),
 });
 
-export const transactionsSchemas = { createTransaction };
+const transactionResponse = createTransaction.extend({
+  id: z.number(),
+});
+
+export const transactionsSchemas = { createTransaction, transactionResponse };
