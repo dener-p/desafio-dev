@@ -3,6 +3,7 @@ const envSchema = z.object({
   NODE_ENV: z
     .enum(['development', 'test', 'production'])
     .default('development'),
+  DOMAIN: z.string().default('localhost'),
   COOKIE_NAME: z.string().default('auth_token'),
   TURSO_URL: z.string().default('file:local.db'),
   TURSO_TOKEN: z.string().optional(),
@@ -12,6 +13,7 @@ const envSchema = z.object({
 export const validateEnv = () => {
   const validate = envSchema.safeParse({
     NODE_ENV: process.env.NODE_ENV,
+    DOMAIN: process.env.DOMAIN,
     COOKIE_NAME: process.env.COOKIE_NAME,
     TURSO_URL: process.env.TURSO_URL,
     TURSO_TOKEN: process.env.TURSO_TOKEN,
