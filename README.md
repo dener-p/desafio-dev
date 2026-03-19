@@ -4,13 +4,13 @@ Esta é a solução para o desafio técnico Fullstack (NestJS + NextJS).
 
 ## 🚀 Tecnologias Utilizadas
 
+- Turborepo
+
 **Backend:**
 
 - NestJS (Framework)
-- Fastify (Web Server)
 - Drizzle ORM (Banco de Dados)
 - SQLite (Banco Relacional) (Turso no deploy)
-- Passport & JWT (Autenticação)
 - Swagger (Documentação API)
 
 **Frontend:**
@@ -21,6 +21,9 @@ Esta é a solução para o desafio técnico Fullstack (NestJS + NextJS).
 - Axios (Cliente HTTP)
 - Lucide React (Ícones)
 
+**Shared:**
+ - Zod schema compartilhado entre front e backend.
+   
 ---
 
 ## ⚙️ Como Instalar e Executar
