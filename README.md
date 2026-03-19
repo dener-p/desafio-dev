@@ -31,6 +31,12 @@ Esta é a solução para o desafio técnico Fullstack (NestJS + NextJS).
 
 Siga os passos abaixo para rodar o projeto localmente:
 
+Intale [bun](https://bun.sh/)
+
+```bash
+bun i
+```
+
 Instale as dependências:
 
 ```bash
@@ -41,7 +47,6 @@ Para subir o banco de dados apenas de o seguinte commando:
 
 ```bash
 bun db:push
-#or
 ```
 
 A API estará rodando em `http://localhost:3001`. A documentação **Swagger** pode ser acessada em `http://localhost:3001/swagger`.
