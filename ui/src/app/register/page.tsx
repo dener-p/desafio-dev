@@ -6,6 +6,7 @@ import * as z from "zod";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/api/auth";
+import { useMutation } from "@tanstack/react-query";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -17,7 +18,7 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
   const router = useRouter();
-  const signup = auth.signup();
+  const signup = useMutation(auth.signup);
 
   const {
     register,
