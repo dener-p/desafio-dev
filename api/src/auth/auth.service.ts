@@ -15,7 +15,6 @@ export type SessionValidationResult =
   | { session: SessionType; user: UserType }
   | { session: null; user: null };
 
-const DOMAIN = process.env.DOMAIN;
 const TOKEN = process.env.COOKIE_NAME ?? 'auth_token';
 export type UserType = InferSelectModel<typeof user>;
 export type SessionType = InferSelectModel<typeof session>;
@@ -122,7 +121,6 @@ export class AuthService {
         expires: expiresAt,
         secure: true,
         path: '/',
-        domain: DOMAIN,
       });
     } else {
       // When deployed over HTTP (localhost)
@@ -131,7 +129,6 @@ export class AuthService {
         sameSite: 'lax',
         expires: expiresAt,
         path: '/',
-        domain: DOMAIN,
       });
     }
   }
@@ -141,7 +138,6 @@ export class AuthService {
       sameSite: 'lax',
       expires: new Date(),
       path: '/',
-      domain: DOMAIN,
     });
   }
   getSessionCookieName() {
