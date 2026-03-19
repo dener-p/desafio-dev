@@ -32,8 +32,8 @@ export class AuthGuard implements CanActivate {
     const req = http.getRequest<FastifyRequest>();
     const res = http.getResponse<FastifyReply>();
 
-    // use this if the domain is yours... Far more secure
-
+    // for the test i will be using basic auth, in prodution remove the req.headers.authorization, will should
+    // only use the token set by the backend
     const token =
       this.auth.getCookieHelper(req, this.auth.sessionCookieName) ??
       req.headers.authorization?.replace('Bearer ', '').trim();

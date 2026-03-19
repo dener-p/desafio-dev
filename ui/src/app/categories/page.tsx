@@ -3,13 +3,23 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Trash2, Tags, Plus } from "lucide-react";
+import { Trash2, Tags, Plus, Edit } from "lucide-react";
 import { categoriesSchemas } from "@desafio-dev/shared/categories-schemas";
 import { categories, Category } from "@/api/categories";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { useState } from "react";
 
 type CategoryFormData = z.infer<typeof categoriesSchemas.createCategory>;
+type UpdateCategoryFormData = z.infer<typeof categoriesSchemas.updateCategory>;
 
 export default function CategoriesPage() {
   const createCategory = useMutation(categories.newCategory);
@@ -113,13 +123,17 @@ export default function CategoriesPage() {
                   className="p-4 px-6 flex items-center justify-between hover:bg-slate-800/50 transition-colors"
                 >
                   <span className="text-slate-200 font-medium">{cat.name}</span>
-                  <button
-                    onClick={() => handleDelete(cat.id)}
-                    className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
-                    title="Delete category"
-                  >
-                    <Trash2 size={18} />
-                  </button>
+                  <div className="flex gap-2">
+                    <UpdateCategory id={cat.id} name={cat.name} />
+                    <Button
+                      onClick={() => handleDelete(cat.id)}
+                      size="icon"
+                      variant="destructive"
+                      title="Delete category"
+                    >
+                      <Trash2 size={18} />
+                    </Button>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -129,3 +143,98 @@ export default function CategoriesPage() {
     </div>
   );
 }
+
+const UpdateCategory = ({ name, id }: { name: string; id: number }) => {
+  const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
+  const updateCategory = useMutation({
+    ...categories.updateCategory,
+    onSuccess: () => setOpen(false),
+    onMutate: async (data) => {
+      await queryClient.cancelQueries({
+        queryKey: categories.getCategories.queryKey,
+      });
+      const previousCategories = queryClient.getQueryData<Category[]>(
+        categories.getCategories.queryKey,
+      );
+      // Optimistically update the cache
+      if (previousCategories) {
+        queryClient.setQueryData<Category[]>(
+          categories.getCategories.queryKey,
+          previousCategories.map(({ name, id }) => {
+            if (id === data.id) {
+              return {
+                name: data.name,
+                id,
+              };
+            }
+            return { id, name };
+          }),
+        );
+      }
+
+      return { previousCategories };
+    },
+  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<UpdateCategoryFormData>({
+    resolver: zodResolver(categoriesSchemas.updateCategory),
+    values: {
+      name: name,
+      id: id,
+    },
+  });
+  const onSubmit = async (data: UpdateCategoryFormData) => {
+    updateCategory.mutate(data);
+    reset();
+  };
+  return (
+    <Dialog onOpenChange={setOpen} open={open}>
+      <DialogTrigger
+        render={
+          <Button size="icon">
+            <Edit />
+          </Button>
+        }
+      ></DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Editar categoria: {name}.</DialogTitle>
+          <DialogDescription>
+            Editar esta categoria irá alterar todoas as transações cadastrada.
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-1">
+              Nome
+            </label>
+            <input
+              {...register("name")}
+              type="text"
+              className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
+              placeholder="Salario, Mercado"
+            />
+            {errors.name && (
+              <p className="text-red-400 text-xs mt-1">{errors.name.message}</p>
+            )}
+          </div>
+
+          <Button
+            type="submit"
+            loading={updateCategory.isPending}
+            size="lg"
+            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-2.5 rounded-lg transition-transform transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            <Plus size={18} />
+            Salvar
+          </Button>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+};

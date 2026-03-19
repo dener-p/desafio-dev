@@ -21,9 +21,17 @@ const createTransaction = z.object({
     }),
 });
 
+const updateTransactoin = createTransaction.extend({
+  id: z.number(),
+});
+
 const transactionResponse = createTransaction.extend({
   id: z.number(),
   categoryName: z.string().nullable(),
 });
 
-export const transactionsSchemas = { createTransaction, transactionResponse };
+export const transactionsSchemas = {
+  createTransaction,
+  transactionResponse,
+  updateTransactoin,
+};

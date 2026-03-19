@@ -12,4 +12,11 @@ const categoryResponse = z.object({
   name: z.string(),
 });
 
-export const categoriesSchemas = { createCategory, categoryResponse };
+const updateCategory = createCategory.extend({
+  id: z.number(),
+});
+export const categoriesSchemas = {
+  createCategory,
+  categoryResponse,
+  updateCategory,
+};

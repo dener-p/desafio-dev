@@ -5,6 +5,11 @@ import Link from "next/link";
 import { formatDate } from "@/utils/format-date";
 import { transactions } from "@/api/transactions";
 import { useQuery } from "@tanstack/react-query";
+import {
+  CreateTransaction,
+  DeleteTransaction,
+  UpdateTransaction,
+} from "@/components/transaction-dialogs";
 
 export default function DashboardPage() {
   const { data } = useQuery(transactions.getTransactions);
@@ -29,13 +34,7 @@ export default function DashboardPage() {
     <>
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-white">Dashboard</h1>
-        <Link
-          href="/transactions/new"
-          className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-all"
-        >
-          <Plus size={20} />
-          Nova transação
-        </Link>
+        <CreateTransaction />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -98,7 +97,7 @@ export default function DashboardPage() {
                 key={t.id}
                 className="p-6 flex items-center justify-between hover:bg-slate-800/50 transition-colors"
               >
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-4">
                   <span className="font-medium text-slate-200">
                     {t.description}
                   </span>
@@ -109,11 +108,18 @@ export default function DashboardPage() {
                     <span>{formatDate(t.date)}</span>
                   </div>
                 </div>
-                <div
-                  className={`font-semibold ${t.type === "income" ? "text-emerald-400" : "text-red-400"}`}
-                >
-                  {t.type === "income" ? "+" : "-"}
-                  {formatCurrency(t.amount)}
+
+                <div className="flex flex-col gap-4">
+                  <div
+                    className={`font-semibold ${t.type === "income" ? "text-emerald-400" : "text-red-400"}`}
+                  >
+                    {t.type === "income" ? "+" : "-"}
+                    {formatCurrency(t.amount)}
+                  </div>
+                  <div className="flex gap-1 ml-auto">
+                    <DeleteTransaction id={t.id} />
+                    <UpdateTransaction transaction={t} />
+                  </div>
                 </div>
               </div>
             ))}

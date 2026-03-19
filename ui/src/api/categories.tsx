@@ -22,6 +22,16 @@ const newCategory = {
   },
 };
 
+const updateCategory = {
+  mutationKey: ["update", "category"],
+  mutationFn: async (
+    data: z.infer<typeof categoriesSchemas.updateCategory>,
+  ) => {
+    const res = await api.patch("/categories/" + data.id, data);
+    return res.data as Category[];
+  },
+};
+
 const deleteCategory = {
   mutationKey: ["delete", "category"],
   mutationFn: async (id: number) => {
@@ -34,4 +44,5 @@ export const categories = {
   getCategories,
   newCategory,
   deleteCategory,
+  updateCategory,
 };
