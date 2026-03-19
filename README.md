@@ -31,7 +31,7 @@ Esta é a solução para o desafio técnico Fullstack (NestJS + NextJS).
 
 Siga os passos abaixo para rodar o projeto localmente:
 
-Intale [bun](https://bun.sh/)
+Instale [bun](https://bun.sh/)
 
 ```bash
 bun i
