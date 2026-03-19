@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import 'dotenv/config';
 import { AppModule } from './app.module';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
@@ -9,7 +10,11 @@ import fastifyCookie from '@fastify/cookie';
 import { validateEnv } from './env';
 
 async function bootstrap() {
+  console.log(process.env.TURSO_TOKEN);
   validateEnv();
+  console.log({
+    env: process.env.TURSO_TOKEN,
+  });
   const adapter = new FastifyAdapter();
 
   await adapter.register(fastifyCookie);

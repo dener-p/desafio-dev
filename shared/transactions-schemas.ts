@@ -7,7 +7,7 @@ const createTransaction = z.object({
     .trim(),
   amount: z
     .number({ message: "Valor está invalido" })
-    .min(0.01, { message: "O valor minímo é 0.01 " })
+    .min(1, { message: "O valor minímo é 1 " })
     .max(Number.MAX_SAFE_INTEGER, {
       message: `O valor máximo de ${Number.MAX_SAFE_INTEGER} `,
     }),

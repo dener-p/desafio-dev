@@ -108,7 +108,7 @@ export class TransactionsService {
     updateTransactionDto: UpdateTransactionDto,
     userId: number,
   ) {
-    await this.findOne(id, userId);
+    const res = await this.findOne(id, userId);
 
     if (updateTransactionDto.categoryId) {
       const category = await db
@@ -132,7 +132,12 @@ export class TransactionsService {
 
     const result = await db
       .update(transactions)
-      .set(updateTransactionDto)
+      .set({
+        ...updateTransactionDto,
+        amount: updateTransactionDto.amount
+          ? Math.floor(updateTransactionDto.amount * 100)
+          : res.amount,
+      })
       .where(and(eq(transactions.id, id), eq(transactions.userId, userId)))
       .returning();
 
