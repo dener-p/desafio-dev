@@ -7,7 +7,6 @@ import { cleanupOpenApiDoc } from 'nestjs-zod';
 import cors from '@fastify/cors';
 import fastifyCookie from '@fastify/cookie';
 import { validateEnv } from './env';
-import { loadEnvFile } from 'process';
 
 async function bootstrap() {
   validateEnv();
@@ -15,9 +14,8 @@ async function bootstrap() {
 
   await adapter.register(fastifyCookie);
   // register CORS on the raw fastify instance
-  console.log({ cors: process.env.CORS });
   await adapter.register(cors, {
-    origin: 'http://localhost:3000',
+    origin: process.env.CORS,
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
