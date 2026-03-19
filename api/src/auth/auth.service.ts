@@ -3,7 +3,6 @@ import { hash } from 'bcrypt';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { db } from 'src/database/database';
 import { user, session } from 'src/database/schema';
-import { getCookieHelper } from 'src/helpers/get-cookie';
 import { SingupDto } from './dto/singup.dto';
 import {
   encodeBase32LowerCaseNoPadding,
@@ -36,6 +35,14 @@ export class AuthService {
     crypto.getRandomValues(bytes);
     const token = encodeBase32LowerCaseNoPadding(bytes);
     return token;
+  }
+
+  getCookieHelper(req: FastifyRequest, cookieName: string) {
+    const cookies = req.headers.cookie;
+    return cookies
+      ?.split(';')
+      .find((c) => c.includes(cookieName))
+      ?.split('=')[1];
   }
 
   private async createSession(
@@ -161,7 +168,7 @@ export class AuthService {
   }
 
   async logout(req: FastifyRequest, res: FastifyReply) {
-    const token = getCookieHelper(req, this.sessionCookieName);
+    const token = this.getCookieHelper(req, this.sessionCookieName);
     if (token) {
       const { session } = await this.validateSessionToken(token);
       if (session) await this.invalidateSession(session.id);

@@ -12,7 +12,6 @@ export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 
 import { SetMetadata } from '@nestjs/common';
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { getCookieHelper } from 'src/helpers/get-cookie';
 import { AuthService } from './auth.service';
 
 @Injectable()
@@ -33,7 +32,7 @@ export class AuthGuard implements CanActivate {
     const req = http.getRequest<FastifyRequest>();
     const res = http.getResponse<FastifyReply>();
 
-    const token = getCookieHelper(req, this.auth.sessionCookieName);
+    const token = this.auth.getCookieHelper(req, this.auth.sessionCookieName);
     if (!token) throw new UnauthorizedException();
 
     const { session, user } = await this.auth.validateSessionToken(token);
