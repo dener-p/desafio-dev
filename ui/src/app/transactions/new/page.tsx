@@ -9,6 +9,7 @@ import { transactionsSchemas } from "@desafio-dev/shared/transactions-schemas";
 import { transactions } from "@/api/transactions";
 import { categories } from "@/api/categories";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
 
 type TransactionFormData = z.infer<
   typeof transactionsSchemas.createTransaction
@@ -21,7 +22,7 @@ export default function NewTransactionPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     reset,
   } = useForm<TransactionFormData>({
     resolver: zodResolver(transactionsSchemas.createTransaction),
@@ -148,14 +149,15 @@ export default function NewTransactionPage() {
           </div>
 
           <div className="pt-4 border-t border-slate-800">
-            <button
+            <Button
               type="submit"
-              disabled={isSubmitting}
-              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-3 rounded-lg transition-transform transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed text-lg"
+              size="lg"
+              loading={createTransaction.isPending}
+              className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-3 rounded-lg transition-transform transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed text-lg"
             >
               <Plus size={20} />
-              {isSubmitting ? "Saving..." : "Salvar transação"}
-            </button>
+              Salvar transação
+            </Button>
           </div>
         </form>
       </div>

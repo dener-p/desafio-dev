@@ -80,7 +80,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="bg-card border border-slate-800 rounded-2xl overflow-hidden">
+      <div className="bg-card border border-slate-800 rounded-2xl overflow-hidden ">
         <div className="p-6 border-b border-slate-800">
           <h2 className="text-lg font-semibold text-white">
             Transações Recentes

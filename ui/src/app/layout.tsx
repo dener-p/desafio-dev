@@ -25,7 +25,7 @@ export default function RootLayout({
         <QueryProvider>
           <Navbar />
           <Toaster />
-          <main className="max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+          <main className="max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-20 space-y-8 min-h-dvh">
             {children}
           </main>
         </QueryProvider>

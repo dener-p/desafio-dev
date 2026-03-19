@@ -7,6 +7,7 @@ import { Trash2, Tags, Plus } from "lucide-react";
 import { categoriesSchemas } from "@desafio-dev/shared/categories-schemas";
 import { categories, Category } from "@/api/categories";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
 
 type CategoryFormData = z.infer<typeof categoriesSchemas.createCategory>;
 
@@ -38,7 +39,7 @@ export default function CategoriesPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     reset,
   } = useForm<CategoryFormData>({
     resolver: zodResolver(categoriesSchemas.createCategory),
@@ -54,7 +55,7 @@ export default function CategoriesPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-8 h-full">
       <div className="flex items-center gap-3 mb-8">
         <Tags className="text-blue-400" size={28} />
         <h1 className="text-2xl font-bold text-white">Gerenciar Categorias</h1>
@@ -84,14 +85,15 @@ export default function CategoriesPage() {
                 )}
               </div>
 
-              <button
+              <Button
                 type="submit"
-                disabled={isSubmitting}
+                loading={createCategory.isPending}
+                size="lg"
                 className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-2.5 rounded-lg transition-transform transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 <Plus size={18} />
-                {isSubmitting ? "Saving..." : "Adicionar"}
-              </button>
+                Adicionar
+              </Button>
             </form>
           </div>
         </div>

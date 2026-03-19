@@ -21,7 +21,7 @@ export function Navbar() {
   }, [me.isError, router, pathname]);
 
   return (
-    <nav className="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
+    <nav className="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md fixed w-full top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-8">
@@ -49,7 +49,11 @@ export function Navbar() {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-slate-400">Olá, {me.data?.name}</span>
+            {me.data ? (
+              <span className="text-sm text-slate-400">
+                Olá, {me.data?.name}
+              </span>
+            ) : null}
             <button
               onClick={() => logout.mutate()}
               className="p-2 text-slate-400 hover:text-red-400 transition-colors rounded-full hover:bg-slate-800"
