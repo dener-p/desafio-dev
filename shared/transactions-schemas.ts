@@ -13,11 +13,17 @@ const createTransaction = z.object({
     }),
   type: z.enum(["income", "expense"]),
   categoryId: z.number({ message: "Categoria inválida." }),
-  date: z.string(),
+  date: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .refine((val) => !isNaN(Date.parse(val)), {
+      message: "Data inválida",
+    }),
 });
 
 const transactionResponse = createTransaction.extend({
   id: z.number(),
+  categoryName: z.string().nullable(),
 });
 
 export const transactionsSchemas = { createTransaction, transactionResponse };

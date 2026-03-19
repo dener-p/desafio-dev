@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { api } from "@/lib/api";
 import { Trash2, Tags, Plus } from "lucide-react";
 import { categoriesSchemas } from "@desafio-dev/shared/categories-schemas";
 import { categories, Category } from "@/api/categories";
@@ -41,12 +39,14 @@ export default function CategoriesPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    reset,
   } = useForm<CategoryFormData>({
     resolver: zodResolver(categoriesSchemas.createCategory),
   });
 
   const onSubmit = async (data: CategoryFormData) => {
     createCategory.mutate(data);
+    reset();
   };
 
   const handleDelete = async (id: number) => {

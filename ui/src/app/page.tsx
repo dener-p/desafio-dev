@@ -22,7 +22,7 @@ export default function DashboardPage() {
     return new Intl.NumberFormat("pt-BR", {
       style: "currency",
       currency: "BRL",
-    }).format(value / 100);
+    }).format(value);
   };
 
   return (
@@ -104,7 +104,7 @@ export default function DashboardPage() {
                   </span>
                   <div className="flex items-center gap-3 text-sm text-slate-400">
                     <span className="bg-slate-800 px-2 py-0.5 rounded text-xs">
-                      {t.categoryName || "General"}
+                      {t.categoryName || "Geral"}
                     </span>
                     <span>{formatDate(t.date)}</span>
                   </div>

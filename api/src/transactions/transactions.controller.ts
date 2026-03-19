@@ -25,12 +25,13 @@ export class TransactionsController {
 
   @Post()
   @ApiOperation({ summary: 'Create a transaction' })
-  @ZodResponse({ type: TransactionResponseDto })
-  create(
+  @ZodResponse({ type: DefaultResponseDto })
+  async create(
     @Body() createTransactionDto: CreateTransactionDto,
     @Req() req: { user: { id: number } },
   ) {
-    return this.transactionsService.create(createTransactionDto, req.user.id);
+    await this.transactionsService.create(createTransactionDto, req.user.id);
+    return { msg: 'Transação criada com sucesso!' };
   }
 
   @Get()

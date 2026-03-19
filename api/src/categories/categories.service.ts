@@ -2,21 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { db } from '../database/database';
-import { categories } from '../database/schema';
+import { categories, transactions } from '../database/schema';
 import { eq, and } from 'drizzle-orm';
 import { AppException } from 'src/app.exception';
-import { TransactionsService } from 'src/transactions/transactions.service';
 
 @Injectable()
 export class CategoriesService {
-  constructor(
-    private readonly transactionsService: TransactionsService, // 👈
-  ) {}
   async create(createCategoryDto: CreateCategoryDto, userId: number) {
     const result = await db
       .insert(categories)
       .values({
         name: createCategoryDto.name,
+
         userId,
       })
       .returning();
@@ -47,7 +44,7 @@ export class CategoriesService {
     updateCategoryDto: UpdateCategoryDto,
     userId: number,
   ) {
-    await this.findOne(id, userId); // check exists
+    await this.findOne(id, userId);
     const result = await db
       .update(categories)
       .set({ name: updateCategoryDto.name })
@@ -55,10 +52,27 @@ export class CategoriesService {
       .returning();
     return result[0];
   }
+  private async findTransactionByCategoryId(
+    categoryId: number,
+    userId: number,
+  ) {
+    const [res] = await db
+      .select({ id: transactions.id })
+      .from(transactions)
+      .where(
+        and(
+          eq(transactions.categoryId, categoryId),
+          eq(transactions.userId, userId),
+        ),
+      );
+
+    // typescript...
+    return res ?? null;
+  }
 
   async remove(id: number, userId: number) {
     await this.findOne(id, userId);
-    const hasTransaction = await this.transactionsService.findOne(id, userId);
+    const hasTransaction = await this.findTransactionByCategoryId(id, userId);
     if (hasTransaction) {
       throw new AppException({
         // probabily needs a better name

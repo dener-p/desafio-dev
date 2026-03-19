@@ -62,7 +62,19 @@ export class CategoriesController {
     @Body() updateCategoryDto: UpdateCategoryDto,
     @Req() req: { user: { id: number } },
   ) {
-    await this.categoriesService.update(+id, updateCategoryDto, req.user.id);
+    const idNumber = Number(id);
+    if (Number.isNaN(idNumber)) {
+      throw new AppException({
+        message: 'id must be a number',
+        cause: 'VALIDATION',
+      });
+    }
+    await this.categoriesService.update(
+      idNumber,
+      updateCategoryDto,
+      req.user.id,
+    );
+
     return { msg: 'Categoria modificada com sucesso!' };
   }
 

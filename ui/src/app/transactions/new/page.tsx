@@ -16,12 +16,13 @@ type TransactionFormData = z.infer<
 
 export default function NewTransactionPage() {
   const createTransaction = useMutation(transactions.newTransactions);
-  const categoies = useQuery(categories.getCategories);
+  const { data } = useQuery(categories.getCategories);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    reset,
   } = useForm<TransactionFormData>({
     resolver: zodResolver(transactionsSchemas.createTransaction),
     defaultValues: {
@@ -32,6 +33,7 @@ export default function NewTransactionPage() {
 
   const onSubmit = async (data: TransactionFormData) => {
     createTransaction.mutate(data);
+    reset();
   };
 
   return (
@@ -131,7 +133,7 @@ export default function NewTransactionPage() {
                 className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow appearance-none"
               >
                 <option value="">Selecione uma categoria.</option>
-                {categories.data?.map((cat) => (
+                {data?.map((cat) => (
                   <option key={cat.id} value={cat.id}>
                     {cat.name}
                   </option>

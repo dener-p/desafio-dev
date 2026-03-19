@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import type { CreateTransactionDto } from './dto/create-transaction.dto';
 import type { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { db } from '../database/database';
@@ -32,6 +32,7 @@ export class TransactionsService {
       .insert(transactions)
       .values({
         ...createTransactionDto,
+        amount: Math.floor(createTransactionDto.amount * 100),
         userId,
       })
       .returning();
@@ -40,7 +41,7 @@ export class TransactionsService {
 
   async findAll(userId: number) {
     // Should add pagination here...
-    return db
+    const data = await db
       .select({
         id: transactions.id,
         description: transactions.description,
@@ -54,12 +55,22 @@ export class TransactionsService {
       .leftJoin(categories, eq(transactions.categoryId, categories.id))
       .where(eq(transactions.userId, userId))
       .orderBy(desc(transactions.date));
+    return data.map((d) => ({ ...d, amount: d.amount / 100 }));
   }
 
   async findOne(id: number, userId: number) {
     const result = await db
-      .select()
+      .select({
+        id: transactions.id,
+        description: transactions.description,
+        amount: transactions.amount,
+        type: transactions.type,
+        date: transactions.date,
+        categoryId: transactions.categoryId,
+        categoryName: categories.name,
+      })
       .from(transactions)
+      .leftJoin(categories, eq(transactions.categoryId, categories.id))
       .where(and(eq(transactions.id, id), eq(transactions.userId, userId)))
       .limit(1);
 
@@ -69,7 +80,11 @@ export class TransactionsService {
         cause: 'TransactioinNotFound',
       });
     }
-    return result[0];
+    const data = result[0];
+    return {
+      ...data,
+      amount: data.amount / 100,
+    };
   }
 
   async findByCategoryId(categoryId: number, userId: number) {
