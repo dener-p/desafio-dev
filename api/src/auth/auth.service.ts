@@ -166,7 +166,10 @@ export class AuthService {
   }
 
   async logout(req: FastifyRequest, res: FastifyReply) {
-    const token = this.getCookieHelper(req, this.sessionCookieName);
+    const token =
+      this.getCookieHelper(req, this.sessionCookieName) ??
+      req.headers.authorization?.replace('Bearer ', '').trim();
+
     if (token) {
       const { session } = await this.validateSessionToken(token);
       if (session) await this.invalidateSession(session.id);
