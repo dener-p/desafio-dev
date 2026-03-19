@@ -33,10 +33,6 @@ Siga os passos abaixo para rodar o projeto localmente:
 
 Instale [bun](https://bun.sh/)
 
-```bash
-bun i
-```
-
 Instale as dependências:
 
 ```bash
@@ -52,6 +48,12 @@ bun db:push
 A API estará rodando em `http://localhost:3001`. A documentação **Swagger** pode ser acessada em `http://localhost:3001/swagger`.
 
 O Frontend estará rodando em `http://localhost:3000`.
+
+Se quiser use olhar o banco de dados use:
+```bash
+bun db:studio
+```
+Disponível em `https://local.drizzle.studio/` .
 
 ---
 
