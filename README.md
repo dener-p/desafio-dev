@@ -22,8 +22,9 @@ Esta é a solução para o desafio técnico Fullstack (NestJS + NextJS).
 - Lucide React (Ícones)
 
 **Shared:**
- - Zod schema compartilhado entre front e backend.
-   
+
+- Zod schema compartilhado entre front e backend.
+
 ---
 
 ## ⚙️ Como Instalar e Executar
@@ -34,8 +35,6 @@ Instale as dependências:
 
 ```bash
 bun i
-#or
-npm i
 ```
 
 Para subir o banco de dados apenas de o seguinte commando:
@@ -43,7 +42,6 @@ Para subir o banco de dados apenas de o seguinte commando:
 ```bash
 bun db:push
 #or
-npm run db:push
 ```
 
 A API estará rodando em `http://localhost:3001`. A documentação **Swagger** pode ser acessada em `http://localhost:3001/swagger`.
@@ -59,5 +57,3 @@ O Frontend estará rodando em `http://localhost:3000`.
 ## 🗄️ Estrutura do Banco
 
 Utilizamos Drizzle ORM com SQLite. O schema reside em `api/src/database/schema.ts` definindo as tabelas `users`, `categories`, `sessions`, e `transactions` corretamente relacionadas via chaves estrangeiras.
-
-> O banco de dados foi gerado usando o comando `npx drizzle-kit push` para garantir a versão atual do schema.

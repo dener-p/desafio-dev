@@ -7,6 +7,7 @@ import Link from "next/link";
 import { auth } from "@/api/auth";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -18,6 +19,7 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
   const signup = useMutation(auth.signup);
+  const router = useRouter();
 
   const {
     register,
@@ -28,11 +30,13 @@ export default function RegisterPage() {
   });
 
   const onSubmit = async (data: RegisterFormData) => {
-    signup.mutate({
+    await signup.mutateAsync({
       email: data.email,
       password: data.password,
       name: data.name,
     });
+
+    router.push("/");
   };
 
   return (

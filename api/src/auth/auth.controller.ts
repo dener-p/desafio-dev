@@ -57,6 +57,7 @@ export class AuthController {
   @Public()
   @Post('singup')
   @HttpCode(200)
+  @ZodResponse({ type: LoginResponseDto })
   async singup(
     @Body() body: SingupDto,
     @Req() req: FastifyRequest,
@@ -76,9 +77,9 @@ export class AuthController {
     }
 
     const ip = this.authService.getIp(req);
-    await this.authService.singup(res, body, ip);
+    const token = await this.authService.singup(res, body, ip);
 
-    return;
+    return { token };
   }
 
   @Post('logout')

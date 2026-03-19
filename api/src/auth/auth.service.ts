@@ -160,10 +160,9 @@ export class AuthService {
       .returning({ id: user.id });
     const token = this.generateSessionToken();
     await this.createSession(token, userInfo.id, ip);
-
     this.setSessionTokenCookie(res, token);
 
-    return;
+    return token;
   }
 
   async logout(req: FastifyRequest, res: FastifyReply) {

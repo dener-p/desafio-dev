@@ -24,7 +24,6 @@ const queryClient = new QueryClient({
     },
     onSuccess: (data) => {
       const response = data as { msg?: string };
-      console.log({ response });
       if (response?.msg) {
         toast.success(response.msg);
       }
