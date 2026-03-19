@@ -49,7 +49,7 @@ export function Navbar() {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            {me.data ? (
+            {me.isSuccess && me.data ? (
               <span className="text-sm text-slate-400">
                 Olá, {me.data?.name}
               </span>
