@@ -32,7 +32,11 @@ export class AuthGuard implements CanActivate {
     const req = http.getRequest<FastifyRequest>();
     const res = http.getResponse<FastifyReply>();
 
-    const token = this.auth.getCookieHelper(req, this.auth.sessionCookieName);
+    // use this if the domain is yours... Far more secure
+
+    const token =
+      this.auth.getCookieHelper(req, this.auth.sessionCookieName) ??
+      req.headers.authorization?.replace('Bearer ', '').trim();
     if (!token) throw new UnauthorizedException();
 
     const { session, user } = await this.auth.validateSessionToken(token);

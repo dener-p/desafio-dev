@@ -15,6 +15,9 @@ const login = {
   mutationKey: ["user", "login"],
   mutationFn: async (data: z.infer<typeof userSchemas.login>) => {
     const res = await api.post("/auth/login", data);
+    const { token } = res.data as z.infer<typeof userSchemas.loginResponse>;
+
+    localStorage.setItem("auth_token", token);
     return res.data;
   },
 };

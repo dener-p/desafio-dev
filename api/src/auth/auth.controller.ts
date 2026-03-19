@@ -20,6 +20,7 @@ import { LoginDto } from './dto/login.dto';
 import { AppException } from 'src/app.exception';
 import { ZodResponse } from 'nestjs-zod';
 import { MeResponseDto } from './dto/me-response.dto';
+import { LoginResponseDto } from './dto/login-response.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -28,6 +29,7 @@ export class AuthController {
   @Public()
   @Post('login')
   @HttpCode(200)
+  @ZodResponse({ type: LoginResponseDto })
   async login(
     @Body() body: LoginDto,
     @Req() req: FastifyRequest,
@@ -47,9 +49,9 @@ export class AuthController {
     }
 
     const ip = this.authService.getIp(req);
-    await this.authService.login(res, userInfo.id, ip);
+    const token = await this.authService.login(res, userInfo.id, ip);
 
-    return;
+    return { token };
   }
 
   @Public()
@@ -66,7 +68,7 @@ export class AuthController {
       .where(eq(user.email, body.email));
 
     if (userInfo) {
-      // pls dont use this in production, really not good to expose all your users info...
+      //  dont use this in production, really not good to expose all your users info...
       throw new AppException({
         message: 'Email inválido',
         cause: 'VALIDATION',

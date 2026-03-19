@@ -28,7 +28,7 @@ export class AuthService {
 
     this.setSessionTokenCookie(res, token);
 
-    return;
+    return token;
   }
   private generateSessionToken(): string {
     const bytes = new Uint8Array(20);
@@ -149,8 +149,7 @@ export class AuthService {
   }
 
   async singup(res: FastifyReply, body: SingupDto, ip?: string | null) {
-    // 10 because cloudflare, u should use more
-    const passwordHashed = await hash(body.password, 10);
+    const passwordHashed = await hash(body.password, 12);
     const [userInfo] = await db
       .insert(user)
       .values({

@@ -21,5 +21,8 @@ const me = createUser.omit({ password: true }).extend({
   id: z.number(),
 });
 const login = createUser.omit({ name: true });
+const loginResponse = z.object({
+  token: z.string(),
+});
 
-export const userSchemas = { createUser, login, me };
+export const userSchemas = { createUser, login, me, loginResponse };
