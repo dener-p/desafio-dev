@@ -85,7 +85,7 @@ export default function LoginPage() {
             size="lg"
             className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-2.5 rounded-lg transition-transform transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            Entra
+            Entrar
           </Button>
         </form>
 
