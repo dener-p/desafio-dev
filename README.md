@@ -50,7 +50,7 @@ bun db:push
 Para começar a aplicação.
 
 ```bash
-bun Dev
+bun dev
 ```
 
 A API estará rodando em `http://localhost:3001`. A documentação **Swagger** pode ser acessada em `http://localhost:3001/swagger`.
