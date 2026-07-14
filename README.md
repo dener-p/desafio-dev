@@ -2,7 +2,6 @@
 
 Esta é a solução para o desafio técnico Fullstack (NestJS + NextJS).
 
-[Prévia](https://desafio-dev-production-dener.up.railway.app/)
 
 ## 🚀 Tecnologias Utilizadas
 
